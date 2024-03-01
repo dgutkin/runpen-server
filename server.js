@@ -11,7 +11,7 @@ import postRoutes from './routes/postRoutes.js';
 import { VerifyToken } from './middleware/verify-token.js';
 
 const app = express();
-const port = 8080;
+const PORT = process.env.PORT || 8080;
 
 app.use(cors({origin: process.env.CLIENT_URL || 'http://localhost:3000'}));
 
@@ -35,6 +35,6 @@ app.use("/", goalRoutes);
 app.use("/", entryRoutes);
 app.use("/", postRoutes);
 
-app.listen(port, function () {
-  console.log(`runPen back-end listening on port ${port}!`);
+app.listen(PORT, function () {
+  console.log(`runPen back-end listening on port ${PORT}!`);
 });
