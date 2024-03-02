@@ -23,32 +23,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 const dbPath = process.env.DB_URL || 'mongodb://127.0.0.1:27017/runpen';
 
-if (process.env.FIXIE_SOCKS_HOST) {
-
-  const fixieData = process.env.FIXIE_SOCKS_HOST.split(new RegExp('[/(:\\/@/]+'));
-
-  mongoose.connect(dbPath,
-    {
-      proxyUsername: fixieData[0],
-      proxyPassword: fixieData[1],
-      proxyHost: fixieData[2],
-      proxyPort: fixieData[3]
-     },
-    (error) => {
-      if (error){
-        console.log(error)
-      } else {
-        console.log('Connected to database')
-      }
-    }
-
-)
-} else {
-
-  mongoose.connect(dbPath)
-  .then(() => console.log('Database Connected!'));
-  
-}
+mongoose.connect(dbPath)
+.then(() => console.log('Database Connected!'));
 
 app.get("/", function (req, res) {
   res.send("runPen back-end server");
