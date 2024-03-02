@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
 import userRoutes from './routes/userRoutes.js';
 import journalRoutes from './routes/journalRoutes.js';
@@ -12,6 +13,8 @@ import { VerifyToken } from './middleware/verify-token.js';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+dotenv.config();
 
 app.use(cors({origin: process.env.CLIENT_URL || 'http://localhost:3000'}));
 
