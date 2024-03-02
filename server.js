@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 const dbPath = process.env.DB_URL || 'mongodb://127.0.0.1:27017/runpen';
 
-mongoose.connect(dbPath, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(dbPath)
   .then(() => console.log('Database Connected!'));
 
 app.get("/", function (req, res) {
