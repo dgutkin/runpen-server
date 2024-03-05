@@ -2,7 +2,7 @@ import express from 'express';
 
 const router = express.Router();
 
-import { Entry, Post } from '../models/models.js';
+import { Entry, Note } from '../models/models.js';
 
 // route to get all entries in a journal
 router.get("/get-entries", async (req, res) => {
@@ -74,10 +74,7 @@ router.delete("/delete-entry", async (req, res) => {
     try {
 
         const { entryId } = req.query;
-        const posts = await Post.find({ entryId });
-        const postArr = posts.map((item) => item.postId);
-        const postFilter = {"$in" : postArr};
-        await Post.deleteMany({ postId: postFilter });
+        await Note.deleteMany({ entryId });
         await Entry.findOneAndDelete({ entryId });
         
         return res.status(204).send("Entry deleted");

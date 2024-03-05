@@ -2,7 +2,7 @@ import express from 'express';
 
 const router = express.Router();
 
-import { Journal, Entry, Post } from '../models/models.js';
+import { Journal, Entry, Note } from '../models/models.js';
 
 // route for adding a new journal
 router.post("/add-journal", async (req, res) => {
@@ -25,7 +25,7 @@ router.post("/add-journal", async (req, res) => {
 
     } catch(error) {
 
-        res.status(400).send("Error creating journal");
+        res.status(400).send(error.message);
 
     }
 
@@ -80,7 +80,7 @@ router.delete("/delete-journal", async (req, res) => {
         });
         const entryFilter = {"$in" : entryArr}
         
-        await Post.deleteMany({ entryId: entryFilter });
+        await Note.deleteMany({ entryId: entryFilter });
         await Entry.deleteMany({ entryId: entryFilter });
         await Journal.findOneAndDelete({ journalId });
         
