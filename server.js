@@ -8,7 +8,7 @@ import userRoutes from './routes/userRoutes.js';
 import journalRoutes from './routes/journalRoutes.js';
 import goalRoutes from './routes/goalRoutes.js';
 import entryRoutes from './routes/entryRoutes.js';
-import postRoutes from './routes/postRoutes.js';
+import noteRoutes from './routes/noteRoutes.js';
 import { VerifyToken } from './middleware/verify-token.js';
 
 const app = express();
@@ -36,7 +36,7 @@ app.use("/", userRoutes);
 app.use("/", journalRoutes);
 app.use("/", goalRoutes);
 app.use("/", entryRoutes);
-app.use("/", postRoutes);
+app.use("/", noteRoutes);
 
 app.listen(PORT, function () {
   console.log(`runPen back-end listening on port ${PORT}!`);

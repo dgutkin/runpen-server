@@ -30,10 +30,10 @@ const entrySchema = new Schema({
   journalId: String
 });
 
-const postSchema = new Schema({
-  postTitle: String,
-  postText: String,
-  postId: String,
+const noteSchema = new Schema({
+  noteTitle: String,
+  noteText: String,
+  noteId: String,
   entryId: String
 });
 
@@ -41,6 +41,6 @@ const User = mongoose.model('User', userSchema);
 const Journal = mongoose.model('Journal', journalSchema);
 const Goal = mongoose.model('Goal', goalSchema);
 const Entry = mongoose.model('Entry', entrySchema);
-const Post = mongoose.model('Post', postSchema);
+const Note = mongoose.model('Note', noteSchema);
 
-export { User, Journal, Goal, Entry, Post };
+export { User, Journal, Goal, Entry, Note };
