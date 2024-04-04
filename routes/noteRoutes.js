@@ -3,6 +3,7 @@ import express from 'express';
 const router = express.Router();
 
 import { Note } from '../models/models.js';
+import { encrypt, decrypt } from '../util/encrypt-util.js';
 
 // route for getting all notes for a specific entry
 router.get("/get-notes", async (req, res) => {
@@ -10,9 +11,26 @@ router.get("/get-notes", async (req, res) => {
     try {
 
         const { entryId } = req.query;
+
         const notes = await Note.find({ entryId });
 
-        return res.status(200).send(notes);
+        const notesDecrypted = notes.map((item) => {
+
+            if (item.noteTitleIV && item.noteTextIV) {
+
+                const noteTitleDecrypted = decrypt(item.noteTitle, item.noteTitleIV);
+                const noteTextDecrypted = decrypt(item.noteText, item.noteTextIV);
+
+                item.noteTitle = noteTitleDecrypted;
+                item.noteText = noteTextDecrypted;
+
+            }
+
+            return item;
+
+        });
+
+        return res.status(200).send(notesDecrypted);
 
     } catch (error) {
 
@@ -28,12 +46,19 @@ router.post("/add-note", async (req, res) => {
     try {
 
         const { noteTitle, noteText, noteId, entryId  } = req.body;
+
+        const { cipherText: noteTitleEncrypted, initVector: noteTitleIV } = encrypt(noteTitle);
+        const { cipherText: noteTextEncrypted, initVector: noteTextIV } = encrypt(noteText);
+
         let note = new Note({
-            noteTitle,
-            noteText,
+            noteTitle: noteTitleEncrypted,
+            noteTitleIV,
+            noteText: noteTextEncrypted,
+            noteTextIV,
             noteId,
             entryId
         });
+
         note.save()
             .then(() => {
                 res.status(201).send("Note created");
@@ -53,7 +78,8 @@ router.delete("/delete-note", async (req, res) => {
     try {
 
         const { noteId } = req.query;
-        const response = await Note.findOneAndDelete({ noteId });
+
+        await Note.findOneAndDelete({ noteId });
         
         return res.status(200).send(`Note ${noteId} deleted`);
 
@@ -71,7 +97,14 @@ router.put("/update-note", async (req, res) => {
     try {
 
         const { noteTitle, noteText, noteId, entryId  } = req.body;
-        await Note.updateOne({ noteId }, { noteTitle, noteText });
+
+        const { cipherText: noteTitleEncrypted, initVector: noteTitleIV } = encrypt(noteTitle);
+        const { cipherText: noteTextEncrypted, initVector: noteTextIV } = encrypt(noteText);
+
+        await Note.updateOne(
+            { noteId }, 
+            { noteTitle: noteTitleEncrypted, noteTitleIV, noteText: noteTextEncrypted, noteTextIV }
+        );
 
         return res.status(200).send(`Note ${noteId} is updated`);
 
