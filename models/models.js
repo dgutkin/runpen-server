@@ -11,6 +11,7 @@ const userSchema = new Schema({
 
 const journalSchema = new Schema({
   journalName: String,
+  journalNameIV: String,
   createdDate: String,
   journalId: String,
   uid: String
@@ -18,6 +19,7 @@ const journalSchema = new Schema({
 
 const goalSchema = new Schema({
   goalText: String,
+  goalTextIV: String,
   goalId: String,
   journalId: String
 });
@@ -25,14 +27,18 @@ const goalSchema = new Schema({
 const entrySchema = new Schema({
   entryDate: String,
   entryLabel: String,
+  entryLabelIV: String,
   entryEffort: String,
+  entryEffortIV: String,
   entryId: String,
   journalId: String
 });
 
 const noteSchema = new Schema({
   noteTitle: String,
+  noteTitleIV: String,
   noteText: String,
+  noteTextIV: String,
   noteId: String,
   entryId: String
 });
