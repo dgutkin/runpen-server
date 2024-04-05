@@ -3,6 +3,7 @@ import express from 'express';
 const router = express.Router();
 
 import { Goal } from '../models/models.js';
+import { encrypt, decrypt } from '../util/encrypt-util.js';
 
 // route to get all goals in a journal
 router.get("/get-goals", async (req, res) => {
@@ -10,9 +11,27 @@ router.get("/get-goals", async (req, res) => {
     try {
 
         const { journalId } = req.query;
+
         const goals = await Goal.find({ journalId });
 
-        return res.status(200).send(goals);
+        const goalsDecrypted = goals.map((item) => {
+            
+            if (item.goalTextIV) {
+
+                const goalTextDecrypted = decrypt(
+                    item.goalText,
+                    item.goalTextIV
+                );
+                
+                item.goalText = goalTextDecrypted;
+
+            }
+            
+            return item;
+
+        });
+
+        return res.status(200).send(goalsDecrypted);
 
     } catch(error) {
 
@@ -29,8 +48,11 @@ router.post("/add-goal", async (req, res) => {
 
         const { goalText, goalId, journalId } = req.body;
 
+        const { cipherText, initVector } = encrypt(goalText);
+
         let goal = new Goal({
-            goalText,
+            goalText: cipherText,
+            goalTextIV: initVector,
             goalId,
             journalId
         });
@@ -54,6 +76,7 @@ router.delete("/delete-goal", async (req, res) => {
     try {
 
         const { goalId } = req.query;
+
         await Goal.findOneAndDelete({ goalId });
         
         return res.status(204).send(`Goal ${goalId} deleted`);
@@ -72,7 +95,13 @@ router.put("/update-goal", async (req, res) => {
     try {
 
         const { goalText, goalId } = req.body;
-        await Goal.updateOne({ goalId }, { goalText });
+
+        const { cipherText, initVector } = encrypt(goalText);
+
+        await Goal.updateOne(
+            { goalId }, 
+            { goalText: cipherText, goalTextIV: initVector }
+        );
 
         return res.status(200).send(`Goal ${goalId} is updated.`);
 
