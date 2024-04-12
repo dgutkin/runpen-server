@@ -1,2 +1,9 @@
-# runPen Backend
-The back-end server for runPen, a digital run journal. Built with Express.js and MongoDB. The server supports the runPen client available at runpen.ca.
+# runPen Server
+
+The back-end for runPen, a digital training journal. See the client repository for a full README.
+
+[Client](https://github.com/dgutkin/runpen-client)
+
+## License
+
+MIT License
