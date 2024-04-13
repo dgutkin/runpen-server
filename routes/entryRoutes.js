@@ -16,13 +16,11 @@ router.get("/get-entries", async (req, res) => {
 
         const entriesDecrypted = entries.map((item) => {
 
-            if (item.entryLabelIV && item.entryEffortIV) {
+            if (item.entryLabelIV) {
 
                 const entryLabelDecrypted = decrypt(item.entryLabel, item.entryLabelIV);
-                const entryEffortDecrypted = decrypt(item.entryEffort, item.entryEffortIV);
 
                 item.entryLabel = entryLabelDecrypted;
-                item.entryEffort = entryEffortDecrypted;
 
             }
             
@@ -49,13 +47,11 @@ router.get("/get-entry", async (req, res) => {
 
         const entry = await Entry.findOne({ entryId });
 
-        if (entry.entryLabelIV && entry.entryEffortIV) {
+        if (entry.entryLabelIV) {
 
             const entryLabelDecrypted = decrypt(entry.entryLabel, entry.entryLabelIV);
-            const entryEffortDecrypted = decrypt(entry.entryEffort, entry.entryEffortIV);
 
             entry.entryLabel = entryLabelDecrypted;
-            entry.entryEffort = entryEffortDecrypted;
 
         }
         
@@ -74,17 +70,14 @@ router.post("/add-entry", async (req, res) => {
 
     try {
 
-        const { entryDate, entryLabel, entryEffort, entryId, journalId } = req.body;
+        const { entryDate, entryLabel, entryId, journalId } = req.body;
 
         const { cipherText: entryLabelEncrypted, initVector: entryLabelIV } = encrypt(entryLabel);
-        const { cipherText: entryEffortEncrypted, initVector: entryEffortIV } = encrypt(entryEffort);
 
         let entry = new Entry({
             entryDate,
             entryLabel: entryLabelEncrypted,
             entryLabelIV,
-            entryEffort: entryEffortEncrypted,
-            entryEffortIV,
             entryId,
             journalId
         });
@@ -127,14 +120,13 @@ router.put("/update-entry", async (req, res) => {
 
     try {
 
-        const { entryLabel, entryEffort, entryId } = req.body;
+        const { entryLabel, entryId } = req.body;
 
         const { cipherText: entryLabelEncrypted, initVector: entryLabelIV } = encrypt(entryLabel);
-        const { cipherText: entryEffortEncrypted, initVector: entryEffortIV } = encrypt(entryEffort);
 
         await Entry.updateOne(
             { entryId }, 
-            { entryLabel: entryLabelEncrypted, entryLabelIV, entryEffort: entryEffortEncrypted, entryEffortIV }
+            { entryLabel: entryLabelEncrypted, entryLabelIV, }
         );
 
         return res.status(200).send(`Entry ${entryId} is updated.`);

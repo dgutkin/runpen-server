@@ -28,8 +28,6 @@ const entrySchema = new Schema({
   entryDate: String,
   entryLabel: String,
   entryLabelIV: String,
-  entryEffort: String,
-  entryEffortIV: String,
   entryId: String,
   journalId: String
 });
