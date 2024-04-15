@@ -8,6 +8,7 @@ import userRoutes from './routes/userRoutes.js';
 import journalRoutes from './routes/journalRoutes.js';
 import goalRoutes from './routes/goalRoutes.js';
 import entryRoutes from './routes/entryRoutes.js';
+import tagRoutes from './routes/tagRoutes.js';
 import noteRoutes from './routes/noteRoutes.js';
 import { VerifyToken } from './middleware/verify-token.js';
 
@@ -36,6 +37,7 @@ app.use("/", userRoutes);
 app.use("/", journalRoutes);
 app.use("/", goalRoutes);
 app.use("/", entryRoutes);
+app.use("/", tagRoutes);
 app.use("/", noteRoutes);
 
 app.listen(PORT, function () {

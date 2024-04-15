@@ -28,10 +28,15 @@ const entrySchema = new Schema({
   entryDate: String,
   entryLabel: String,
   entryLabelIV: String,
-  entryEffort: String,
-  entryEffortIV: String,
   entryId: String,
   journalId: String
+});
+
+const tagSchema = new Schema({
+  tagText: String,
+  tagTextIV: String,
+  tagId: String,
+  entryId: String
 });
 
 const noteSchema = new Schema({
@@ -47,6 +52,7 @@ const User = mongoose.model('User', userSchema);
 const Journal = mongoose.model('Journal', journalSchema);
 const Goal = mongoose.model('Goal', goalSchema);
 const Entry = mongoose.model('Entry', entrySchema);
+const Tag = mongoose.model('Tag', tagSchema);
 const Note = mongoose.model('Note', noteSchema);
 
-export { User, Journal, Goal, Entry, Note };
+export { User, Journal, Goal, Entry, Tag, Note };

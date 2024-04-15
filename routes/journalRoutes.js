@@ -2,7 +2,7 @@ import express from 'express';
 
 const router = express.Router();
 
-import { Journal, Goal, Entry, Note } from '../models/models.js';
+import { Journal, Goal, Entry, Tag, Note } from '../models/models.js';
 import { encrypt, decrypt } from '../util/encrypt-util.js';
 
 // route for adding a new journal
@@ -114,6 +114,7 @@ router.delete("/delete-journal", async (req, res) => {
         const entryFilter = {"$in" : entryArr}
         
         await Note.deleteMany({ entryId: entryFilter });
+        await Tag.deleteMany({entryId: entryFilter});
         await Entry.deleteMany({ entryId: entryFilter });
         await Goal.deleteMany({ journalId: journalId });
         await Journal.findOneAndDelete({ journalId });
