@@ -2,7 +2,7 @@ import express from 'express';
 
 const router = express.Router();
 
-import { Tag } from '../models/models.js';
+import { Tag, Entry } from '../models/models.js';
 import { encrypt, decrypt } from '../util/encrypt-util.js';
 
 // route for getting all tags for a specific entry
@@ -10,9 +10,20 @@ router.get("/get-tags", async (req, res) => {
 
     try {
 
-        const { entryId } = req.query;
+        const { id, allJournal } = req.query;
+        
+        let tags;
 
-        const tags = await Tag.find({ entryId });
+        if (allJournal === 'true') {
+            const entries = await Entry.find({ journalId: id });
+            tags = await Tag.find(
+                { entryId: 
+                    {"$in": entries.map((item) => item.entryId)} 
+                }
+            );
+        } else {
+            tags = await Tag.find({ entryId: id });
+        }
 
         const tagsDecrypted = tags.map((item) => {
 
