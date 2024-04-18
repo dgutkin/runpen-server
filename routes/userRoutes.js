@@ -58,7 +58,7 @@ router.post("/add-user", async (req, res) => {
 });
 
 // get user name route
-router.get("/user-name", async (req, res) => {
+router.get("/get-user-name", async (req, res) => {
 
   try {
 
@@ -67,6 +67,43 @@ router.get("/user-name", async (req, res) => {
     const userName = user.name;
 
     return res.status(200).send(userName);
+
+  } catch(error) {
+
+    return res.status(400).send(error.message);
+
+  }
+
+});
+
+// get user background image
+router.get("/get-background-image", async (req, res) => {
+
+  try {
+
+    const { uid } = req.query;
+    const user = await User.findOne({ uid });
+    const bgImage = user.bgImage
+
+    return res.status(200).send(bgImage);
+
+  } catch(error) {
+
+    return res.status(400).send(error.message);
+
+  }
+
+});
+
+// update user background image
+router.put("/update-background-image", async (req, res) => {
+
+  try {
+
+    const { uid, bgImage } = req.body;
+    await User.updateOne({ uid }, { bgImage });
+    
+    return res.status(200).send("User background image is updated.");
 
   } catch(error) {
 
