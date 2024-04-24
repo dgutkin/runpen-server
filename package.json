@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "description": "Express server for the running journal",
   "main": "server.js",
-  "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "start": "tsx dist/server.js",
+    "start": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc"
   },
