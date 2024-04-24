@@ -1,12 +1,12 @@
-import express from 'express';
+import { Router, Request, Response } from 'express';
 
-const router = express.Router();
+const router = Router();
 
-import { Tag, Entry } from '../models/models.js';
-import { encrypt, decrypt } from '../util/encrypt-util.js';
+import { Tag, Entry } from '../models/models';
+import { encrypt, decrypt } from '../util/encrypt-util';
 
 // route for getting all tags for a specific entry
-router.get("/get-tags", async (req, res) => {
+router.get("/get-tags", async (req: Request, res: Response) => {
 
     try {
 
@@ -27,7 +27,7 @@ router.get("/get-tags", async (req, res) => {
 
         const tagsDecrypted = tags.map((item) => {
 
-            if (item.tagTextIV) {
+            if (item.tagText && item.tagTextIV) {
 
                 const tagTextDecrypted = decrypt(item.tagText, item.tagTextIV);
 
@@ -43,14 +43,14 @@ router.get("/get-tags", async (req, res) => {
 
     } catch (error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 
 });
 
 // route for adding a tag
-router.post("/add-tag", async (req, res) => {
+router.post("/add-tag", async (req: Request, res: Response) => {
 
     try {
 
@@ -72,14 +72,14 @@ router.post("/add-tag", async (req, res) => {
 
     } catch (error) {
 
-        res.status(400).send(error.message);
+        res.status(400).send(error);
 
     }
 
 });
 
 // route for deleting a tag
-router.delete("/delete-tag", async (req, res) => {
+router.delete("/delete-tag", async (req: Request, res: Response) => {
 
     try {
 
@@ -91,14 +91,14 @@ router.delete("/delete-tag", async (req, res) => {
 
     } catch(error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 
 });
 
 // route for updating tag data
-router.put("/update-tag", async (req, res) => {
+router.put("/update-tag", async (req: Request, res: Response) => {
 
     try {
 
@@ -115,7 +115,7 @@ router.put("/update-tag", async (req, res) => {
 
     } catch (error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 

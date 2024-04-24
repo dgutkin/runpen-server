@@ -1,12 +1,12 @@
-import express from 'express';
+import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 
-const router = express.Router();
+const router = Router();
 
-import { User } from '../models/models.js';
+import { User } from '../models/models';
 
 // create user route
-router.post("/add-user", async (req, res) => {
+router.post("/add-user", async (req: Request, res: Response) => {
 
     try {
   
@@ -51,7 +51,7 @@ router.post("/add-user", async (req, res) => {
   
     } catch(error) {
 
-      return res.status(401).send(error.message);
+      return res.status(401).send(error);
       
     }
     
@@ -64,13 +64,13 @@ router.get("/get-user-name", async (req, res) => {
 
     const { uid } = req.query;
     const user = await User.findOne({ uid });
-    const userName = user.name;
+    const userName = user?.name;
 
     return res.status(200).send(userName);
 
   } catch(error) {
 
-    return res.status(400).send(error.message);
+    return res.status(400).send(error);
 
   }
 
@@ -83,13 +83,13 @@ router.get("/get-background-image", async (req, res) => {
 
     const { uid } = req.query;
     const user = await User.findOne({ uid });
-    const bgImage = user.bgImage
+    const bgImage = user?.bgImage
 
     return res.status(200).send(bgImage);
 
   } catch(error) {
 
-    return res.status(400).send(error.message);
+    return res.status(400).send(error);
 
   }
 
@@ -107,7 +107,7 @@ router.put("/update-background-image", async (req, res) => {
 
   } catch(error) {
 
-    return res.status(400).send(error.message);
+    return res.status(400).send(error);
 
   }
 
