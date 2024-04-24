@@ -1,12 +1,12 @@
-import express from 'express';
+import { Router, Request, Response } from 'express';
 
-const router = express.Router();
+const router = Router();
 
-import { Journal, Goal, Entry, Tag, Note } from '../models/models.js';
-import { encrypt, decrypt } from '../util/encrypt-util.js';
+import { Journal, Goal, Entry, Tag, Note } from '../models/models';
+import { encrypt, decrypt } from '../util/encrypt-util';
 
 // route for adding a new journal
-router.post("/add-journal", async (req, res) => {
+router.post("/add-journal", async (req: Request, res: Response) => {
 
     try {
 
@@ -29,14 +29,14 @@ router.post("/add-journal", async (req, res) => {
 
     } catch(error) {
 
-        res.status(400).send(error.message);
+        res.status(400).send(error);
 
     }
 
 });
 
 // route for getting the list of journals
-router.get("/get-journals", async (req, res) => {
+router.get("/get-journals", async (req: Request, res: Response) => {
 
     try {
 
@@ -45,7 +45,7 @@ router.get("/get-journals", async (req, res) => {
         
         const journalsDecrypted = journals.map((item) => {
 
-            if (item.journalNameIV) {
+            if (item.journalNameIV && item.journalName) {
 
                 const journalNameDecrypted = decrypt(
                     item.journalName,
@@ -64,14 +64,14 @@ router.get("/get-journals", async (req, res) => {
 
     } catch(error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 
 });
 
 // route for getting the journal name
-router.get("/get-journal", async (req, res) => {
+router.get("/get-journal", async (req: Request, res: Response) => {
 
     try {
 
@@ -79,7 +79,7 @@ router.get("/get-journal", async (req, res) => {
 
         const journal = await Journal.findOne({ journalId });
 
-        if (journal.journalNameIV) {
+        if (journal?.journalNameIV && journal?.journalName) {
 
             const journalNameDecrypted = decrypt(
                 journal.journalName, 
@@ -94,14 +94,14 @@ router.get("/get-journal", async (req, res) => {
 
     } catch(error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
     
 });
 
 // route for deleting a journal
-router.delete("/delete-journal", async (req, res) => {
+router.delete("/delete-journal", async (req: Request, res: Response) => {
     
     try {
 
@@ -123,14 +123,14 @@ router.delete("/delete-journal", async (req, res) => {
 
     } catch(error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 
 });
 
 // route for updating a journal
-router.put("/update-journal", async (req, res) => {
+router.put("/update-journal", async (req: Request, res: Response) => {
 
     try {
 
@@ -147,7 +147,7 @@ router.put("/update-journal", async (req, res) => {
 
     } catch (error) {
 
-        res.status(400).send(error.message);
+        res.status(400).send(error);
         
     }
 

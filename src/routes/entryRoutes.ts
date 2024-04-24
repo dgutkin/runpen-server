@@ -1,12 +1,12 @@
-import express from 'express';
+import { Router, Request, Response } from 'express';
 
-const router = express.Router();
+const router = Router();
 
-import { Entry, Note } from '../models/models.js';
-import { encrypt, decrypt } from '../util/encrypt-util.js';
+import { Entry, Note } from '../models/models';
+import { encrypt, decrypt } from '../util/encrypt-util';
 
 // route to get all entries in a journal
-router.get("/get-entries", async (req, res) => {
+router.get("/get-entries", async (req: Request, res: Response) => {
 
     try {
 
@@ -16,7 +16,7 @@ router.get("/get-entries", async (req, res) => {
 
         const entriesDecrypted = entries.map((item) => {
 
-            if (item.entryLabelIV) {
+            if (item.entryLabel && item.entryLabelIV) {
 
                 const entryLabelDecrypted = decrypt(item.entryLabel, item.entryLabelIV);
 
@@ -32,14 +32,14 @@ router.get("/get-entries", async (req, res) => {
 
     } catch(error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 
 });
 
 // route to get one entry by id
-router.get("/get-entry", async (req, res) => {
+router.get("/get-entry", async (req: Request, res: Response) => {
 
     try {
 
@@ -47,7 +47,7 @@ router.get("/get-entry", async (req, res) => {
 
         const entry = await Entry.findOne({ entryId });
 
-        if (entry.entryLabelIV) {
+        if (entry?.entryLabel && entry?.entryLabelIV) {
 
             const entryLabelDecrypted = decrypt(entry.entryLabel, entry.entryLabelIV);
 
@@ -59,14 +59,14 @@ router.get("/get-entry", async (req, res) => {
 
     } catch (error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 
 });
 
 // route to add an entry
-router.post("/add-entry", async (req, res) => {
+router.post("/add-entry", async (req: Request, res: Response) => {
 
     try {
 
@@ -96,7 +96,7 @@ router.post("/add-entry", async (req, res) => {
 });
 
 // route to delete an entry
-router.delete("/delete-entry", async (req, res) => {
+router.delete("/delete-entry", async (req: Request, res: Response) => {
 
     try {
 
@@ -109,14 +109,14 @@ router.delete("/delete-entry", async (req, res) => {
 
     } catch(error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 
 });
 
 // route to update an entry
-router.put("/update-entry", async (req, res) => {
+router.put("/update-entry", async (req: Request, res: Response) => {
 
     try {
 
@@ -133,7 +133,7 @@ router.put("/update-entry", async (req, res) => {
 
     } catch (error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 

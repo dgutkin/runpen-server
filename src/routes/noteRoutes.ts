@@ -1,12 +1,12 @@
-import express from 'express';
+import { Router, Request, Response } from 'express';
 
-const router = express.Router();
+const router = Router();
 
-import { Note } from '../models/models.js';
-import { encrypt, decrypt } from '../util/encrypt-util.js';
+import { Note } from '../models/models';
+import { encrypt, decrypt } from '../util/encrypt-util';
 
 // route for getting all notes for a specific entry
-router.get("/get-notes", async (req, res) => {
+router.get("/get-notes", async (req: Request, res: Response) => {
 
     try {
 
@@ -15,9 +15,9 @@ router.get("/get-notes", async (req, res) => {
         const notes = await Note.find({ entryId });
 
         const notesDecrypted = notes.map((item) => {
-
-            if (item.noteTitleIV && item.noteTextIV) {
-
+            console.log(item);
+            if (item.noteTitle && item.noteTitleIV && item.noteText && item.noteTextIV) {
+                
                 const noteTitleDecrypted = decrypt(item.noteTitle, item.noteTitleIV);
                 const noteTextDecrypted = decrypt(item.noteText, item.noteTextIV);
 
@@ -34,14 +34,14 @@ router.get("/get-notes", async (req, res) => {
 
     } catch (error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 
 });
 
 // route for adding a note
-router.post("/add-note", async (req, res) => {
+router.post("/add-note", async (req: Request, res: Response) => {
 
     try {
 
@@ -66,14 +66,14 @@ router.post("/add-note", async (req, res) => {
 
     } catch (error) {
 
-        res.status(400).send(error.message);
+        res.status(400).send(error);
 
     }
 
 });
 
 // route for deleting a note
-router.delete("/delete-note", async (req, res) => {
+router.delete("/delete-note", async (req: Request, res: Response) => {
 
     try {
 
@@ -85,14 +85,14 @@ router.delete("/delete-note", async (req, res) => {
 
     } catch(error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 
 });
 
 // route for updating note data
-router.put("/update-note", async (req, res) => {
+router.put("/update-note", async (req: Request, res: Response) => {
 
     try {
 
@@ -110,7 +110,7 @@ router.put("/update-note", async (req, res) => {
 
     } catch (error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 

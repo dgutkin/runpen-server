@@ -1,12 +1,12 @@
-import express from 'express';
+import express, { Request, Response, Router } from 'express';
 
-const router = express.Router();
+const router = Router();
 
-import { Goal } from '../models/models.js';
-import { encrypt, decrypt } from '../util/encrypt-util.js';
+import { Goal } from '../models/models';
+import { encrypt, decrypt } from '../util/encrypt-util';
 
 // route to get all goals in a journal
-router.get("/get-goals", async (req, res) => {
+router.get("/get-goals", async (req: Request, res: Response) => {
 
     try {
 
@@ -16,7 +16,7 @@ router.get("/get-goals", async (req, res) => {
 
         const goalsDecrypted = goals.map((item) => {
             
-            if (item.goalTextIV) {
+            if (item.goalTextIV && item.goalText) {
 
                 const goalTextDecrypted = decrypt(
                     item.goalText,
@@ -35,14 +35,14 @@ router.get("/get-goals", async (req, res) => {
 
     } catch(error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 
 });
 
 // route to add a goal
-router.post("/add-goal", async (req, res) => {
+router.post("/add-goal", async (req: Request, res: Response) => {
 
     try {
 
@@ -64,14 +64,14 @@ router.post("/add-goal", async (req, res) => {
 
     } catch(error) {
 
-        res.status(400).send(error.message);
+        res.status(400).send(error);
 
     }
 
 });
 
 // route to delete a goal
-router.delete("/delete-goal", async (req, res) => {
+router.delete("/delete-goal", async (req: Request, res: Response) => {
 
     try {
 
@@ -83,14 +83,14 @@ router.delete("/delete-goal", async (req, res) => {
 
     } catch(error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 
 });
 
 // route to update a goal
-router.put("/update-goal", async (req, res) => {
+router.put("/update-goal", async (req: Request, res: Response) => {
 
     try {
 
@@ -107,7 +107,7 @@ router.put("/update-goal", async (req, res) => {
 
     } catch (error) {
 
-        return res.status(400).send(error.message);
+        return res.status(400).send(error);
 
     }
 
