@@ -15,7 +15,7 @@ router.get("/get-notes", async (req: Request, res: Response) => {
         const notes = await Note.find({ entryId });
 
         const notesDecrypted = notes.map((item) => {
-            console.log(item);
+            
             if (item.noteTitle && item.noteTitleIV && item.noteText && item.noteTextIV) {
                 
                 const noteTitleDecrypted = decrypt(item.noteTitle, item.noteTitleIV);
