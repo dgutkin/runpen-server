@@ -13,7 +13,6 @@ import noteRoutes from './routes/noteRoutes';
 import { VerifyToken } from './middleware/verify-token';
 
 const app = express();
-const PORT = process.env.PORT || 8080;
 
 dotenv.config();
 
@@ -40,6 +39,4 @@ app.use("/", entryRoutes);
 app.use("/", tagRoutes);
 app.use("/", noteRoutes);
 
-app.listen(PORT, function () {
-  console.log(`runPen back-end listening on port ${PORT}!`);
-});
+export default app;
