@@ -4,16 +4,15 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-import userRoutes from './routes/userRoutes';
-import journalRoutes from './routes/journalRoutes';
-import goalRoutes from './routes/goalRoutes';
-import entryRoutes from './routes/entryRoutes';
-import tagRoutes from './routes/tagRoutes';
-import noteRoutes from './routes/noteRoutes';
+import userRoutes from './routes/user-routes';
+import journalRoutes from './routes/journal-routes';
+import goalRoutes from './routes/goal-routes';
+import entryRoutes from './routes/entry-routes';
+import tagRoutes from './routes/tag-routes';
+import noteRoutes from './routes/note-routes';
 import { VerifyToken } from './middleware/verify-token';
 
 const app = express();
-const PORT = process.env.PORT || 8080;
 
 dotenv.config();
 
@@ -40,6 +39,4 @@ app.use("/", entryRoutes);
 app.use("/", tagRoutes);
 app.use("/", noteRoutes);
 
-app.listen(PORT, function () {
-  console.log(`runPen back-end listening on port ${PORT}!`);
-});
+export default app;
