@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-
+    environment: Node
     runs-on: ubuntu-latest
     env:
       FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
