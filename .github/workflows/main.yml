@@ -2,7 +2,9 @@ name: runPen Server CI
 
 on: [push]
 
+# need a mongo instance
 jobs:
+  
   build:
     environment: Node
     runs-on: ubuntu-latest
