@@ -19,10 +19,6 @@ jobs:
     services:
       mongodb:
         image: mongo:4.4.6
-        env:
-          MONGO_INITDB_ROOT_USERNAME: admin
-          MONGO_INITDB_ROOT_PASSWORD: admin
-          MONGO_INITDB_DATABASE: APP-DATABASE
         ports:
           - 27017:27017
         options: >-
