@@ -77,6 +77,13 @@ describe("GET /get-user-name", () => {
 
         const UID = "4AE0opqZsYfKikF63pYEd9kmPU63";
 
+        await User.create({
+            "name": "Test Dev",
+            "email": "testdev@mail.com",
+            "password": "$2b$10$RRcOmVMP0d8C9G4TKykaWutkT6MT.oWBrLesHpbso1E4vMx6wAfFK",
+            "uid": UID
+        });
+
         const token = await getIdToken();
         
         // hit runPen API with get user name
@@ -89,6 +96,8 @@ describe("GET /get-user-name", () => {
 
         // assert correct user name
         expect(result.text).toEqual("Test Dev");
+
+        await User.deleteOne({"name": "Test Dev"});
 
     });  
 
