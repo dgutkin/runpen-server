@@ -45,9 +45,8 @@ jobs:
 
       - name: Initalize MongoDB
         run: |
-          mongosh --host localhost:27017 -u admin -p admin --authenticationDatabase admin <<EOF
+          mongosh --host localhost:27017 <<EOF
             db = db.getSiblingDB('runpen');
-            db.createUser({ user: 'APP-USERNAME', pwd: 'APP-PASSWORD', roles: [{ role: 'readWrite', db: 'runpen' }] });
           EOF
 
     # steps:
