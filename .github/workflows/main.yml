@@ -1,26 +1,64 @@
-name: runPen Server CI
+name: runPen Server Integration Testing
 
 on: [push]
 
-# need a mongo instance
 jobs:
   
-  build:
+  test:
+  
     environment: Node
     runs-on: ubuntu-latest
+    
     env:
       FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
       FIREBASE_PRIVATE_KEY: ${{secrets.FIREBASE_PRIVATE_KEY}}
       FIREBASE_CLIENT_EMAIL: ${{secrets.FIREBASE_CLIENT_EMAIL}}
       FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}}
       ENCRYPT_KEY: ${{secrets.ENCRYPT_KEY}}
+
+    services:
+      mongodb:
+        image: mongo:4.4.6
+        env:
+          MONGO_INITDB_ROOT_USERNAME: admin
+          MONGO_INITDB_ROOT_PASSWORD: admin
+          MONGO_INITDB_DATABASE: APP-DATABASE
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd mongo
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install mongosh
+        run: |
+          sudo apt-get install gnupg
+          wget -qO- https://www.mongodb.org/static/pgp/server-7.0.asc | sudo tee /etc/apt/trusted.gpg.d/server-7.0.asc
+          echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+          sudo apt-get update
+          sudo apt-get install -y mongodb-mongosh
+          mongosh --version
+
+      - name: Initalize MongoDB
+        run: |
+          mongosh --host localhost:27017 -u admin -p admin --authenticationDatabase admin <<EOF
+            db = db.getSiblingDB('runpen');
+            db.createUser({ user: 'APP-USERNAME', pwd: 'APP-PASSWORD', roles: [{ role: 'readWrite', db: 'runpen' }] });
+          EOF
+
+    # steps:
+    #   - uses: actions/checkout@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.7.0'
-        
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
+
+      - name: Build
+        run: npm ci | npm run build --if-present
+
+      - name: Test
+        run: npm test
